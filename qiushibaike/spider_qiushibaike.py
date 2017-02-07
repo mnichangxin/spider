@@ -23,7 +23,7 @@ class Spider:
 		req = urllib2.Request(curUrl, headers = headers) # 请求对象
 		res = urllib2.urlopen(req) # 响应对象
 		pageContent = res.read().decode('utf-8') # 读取结果，其他编码转换为utf-8格式  
- 		# (<span>.*?<h2>(.*?)</h2>.*?</span>)
+ 		
  		author =  re.findall('<div class="author clearfix">.*?<a href=".*?" target="_blank" title=".*?">.*?<h2>(.*?)</h2>.*?</a>.*?</div>', pageContent, re.S) # 段子作者
 		content = re.findall('<div class="content">.*?<span>(.*?).</span>.*?</div>', pageContent, re.S) # 段子内容
 
@@ -42,6 +42,7 @@ class Spider:
 	# 当前页爬完，加载下一页
 	def load(self, page):
 		for i in range(1, page + 1):
+			print u'爬取第' + str(i) + '页......'
 			self.getPage(str(i))
 
 # 程序主入口
