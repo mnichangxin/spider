@@ -17,7 +17,7 @@ class Spider:
 	# 请求网页，正则匹配相应段子
 	def getPage(self, page):
 		curUrl = self.url + page # 当前URL
-		user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)' # 模拟浏览器 
+		user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36' # 模拟浏览器 
 		headers = {'User-Agent': user_agent}
 		
 		req = urllib2.Request(curUrl, headers = headers) # 请求对象
@@ -37,7 +37,7 @@ class Spider:
 		for item in items:
 			f.write(item)
 
-		f.close()
+		# f.close()
 
 	# 当前页爬完，加载下一页
 	def load(self, page):
