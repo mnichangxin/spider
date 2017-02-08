@@ -3,7 +3,7 @@
 
 # 糗事百科爬虫
 
-import urllib, urllib2, re, sys
+import urllib2, re, sys
 
 # 防止Unicode报错
 reload(sys)
@@ -37,13 +37,14 @@ class Spider:
 		for item in items:
 			f.write(item)
 
-		# f.close()
+		f.close()
 
 	# 当前页爬完，加载下一页
 	def load(self, page):
 		for i in range(1, page + 1):
 			print u'爬取第' + str(i) + '页......'
 			self.getPage(str(i))
+
 
 # 程序主入口
 print u'''
