@@ -9,3 +9,5 @@
 * 使用：运行提示输入相关信息（只限于济南大学的小伙伴哦~~），在本地会自动创建一个csv文件，能用Excel直接查看
 
 * 爬取原理：观察了一天了，终于看明白教管怎么POST请求了~~，第一次请求登录成功并获取Cookie到本地，第二次请求的时候直接拿来Cookie用，二次请求查询地址是 `http://jwgl6.ujn.edu.cn/jwglxt/cjcx/cjcx_cxDgXscj.html?doType=query` 
+
+* Bug：由于信息不一致偶尔导致的异常，后续会解决
