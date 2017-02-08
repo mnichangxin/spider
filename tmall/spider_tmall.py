@@ -3,7 +3,7 @@
 
 # 爬取天猫商品评论数据
 
-import urllib2, re, sys
+import urllib2, re, codecs, sys
 
 # 防止Unicode报错
 reload(sys)
