@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*-coding: utf-8-*-
 
-import login
+import login, get
 
 # 程序主入口
 print u'''
@@ -15,5 +15,11 @@ account = str(raw_input())
 print u'请输入密码：'
 password = str(raw_input())
 
+# 登录
 spider_login =  login.SpiderLogin() # 实例化登录模块
 spider_login.login(account, password) # 给登录模块的方法传参
+
+# 抓取页面
+spider_get = get.GetPage()
+spider_get.getContent()
+

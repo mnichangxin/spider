@@ -1,7 +1,8 @@
 # !/usr/bin/python
 # -*-coding: utf-8-*-
 
-import requests, cookielib, re, time, os.path, sys
+import re, time, os.path, sys
+import req
 
 # 防止Unicode报错
 reload(sys)
@@ -9,17 +10,6 @@ sys.setdefaultencoding('utf-8')
 
 # 爬虫登录模块
 class SpiderLogin:
-	# 构造headers
-	headers = {
-		'Host': 'www.zhihu.com',
-		'Referer': 'https://www.zhihu.com/',
-		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-		'Accept-Encoding': 'gzip, deflate, sdch, br'
-	}
-
-	# 建立Session持久连接
-	session = requests.session()
-
 	# 登录
 	def login(self, account, password):
 		# POST参数
@@ -40,20 +30,17 @@ class SpiderLogin:
 
 	    # 尝试登录，如果出现验证码，则输入验证码登录
 		try: 
-			res = Spider.session.post(post_url, data = post_data, headers = Spider.headers)
+			res = req.post(post_url, data = post_data)
 		except:
 			del post_data['captcha_type']
 	    	post_data['captcha'] = self.getCaptcha()
-       		res = Spider.session.post(post_url, data = post_data, headers = Spider.headers)
-
-		r = Spider.session.get('https://www.zhihu.com/people/mnichangxin', headers = Spider.headers)
-		print r.content.decode('utf-8', 'ignore').encode('gbk', 'ignore')
+       		res = req.post(post_url, data = post_data)
 
     # 获取验证码
 	def getCaptcha(self):
 		t = str(int(time.time() * 1000))
 		captcha_url = 'https://www.zhihu.com/captcha.gif?r=' + t + "&type=login"
-		r = Spider.session.get(captcha_url, headers = Spider.headers)
+		r = req.get(captcha_url)
     	
 		with open('captcha.jpg', 'wb') as f:
 			f.write(r.content)
@@ -67,7 +54,7 @@ class SpiderLogin:
 
     # 获取_xsrf动态参数
 	def getXsrf(self):       
-		page = Spider.session.get('https://www.zhihu.com', headers = Spider.headers)   
+		page = req.get('https://www.zhihu.com')   
 		_xsrf = re.findall(r'name="_xsrf" value="(.*?)"', page.text)
 
 		return _xsrf[0]
