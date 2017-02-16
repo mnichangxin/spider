@@ -1,14 +1,51 @@
 # !/usr/bin/python
 # -*-coding: utf-8-*-
 
-import req, HTMLParser
+import re, HTMLParser
+import req
 
+# HTML解码器
+html_parser = HTMLParser.HTMLParser()
+
+# 构造字段容器
+user_id = [] # 用户ID
+user_name = [] # 昵称
+
+# 爬取信息
 class GetPage:
-	def getContent(self):
-		html_parser = HTMLParser.HTMLParser()
+	# 抓取页面内容
+	def getContent(self, url):
+		r = req.get(url)
+		content = html_parser.unescape(r.content)
 
-		r = req.get('https://www.zhihu.com/people/mnichangxin/following')
+		return content
+
+	# 获得关注的总人数，每页20人，计算出关注人列表页数
+	def getNumber(self):
+		content = self.getContent('https://www.zhihu.com/people/mnichangxin/following')
+
+		number = int(re.findall('<div class="NumberBoard-value">(.*?)</div>', content)[0])
+
+		return number / 20 if number / 20 == 0 else number / 20 + 1 
+
+	def getPage(self, page):
+		content = self.getContent('https://www.zhihu.com/people/mnichangxin/following?page=' + page)
+
+		user_id.extend(re.findall('"url":"","urlToken":"(.*?)"', content))
+		user_name.extend(re.findall('"gender":.*?,"name":"(.*?)"', content))
+
+	def load(self):
+		number = self.getNumber()
+
+		for i in range(0, number):
+			self.getPage(str(i + 1))
+
+	def start(self):
+		self.load()
 		
 		f = open('data.txt', 'w')
-		f.write(html_parser.unescape(r.content))
+
+		for i in range(0, len(user_name)):
+			f.write('用户ID：' + user_id[i] + ', ' + '昵称：' + user_name[i] + '\n')
+
 		f.close()

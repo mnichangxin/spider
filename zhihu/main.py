@@ -21,4 +21,4 @@ spider_login.login(account, password) # 给登录模块的方法传参
 
 # 抓取页面
 spider_get = get.GetPage()
-spider_get.getContent()
+spider_get.start()
