@@ -108,14 +108,3 @@ xq = str(raw_input())
 mySpider = Spider()
 mySpider.login(username, password)
 mySpider.getInfo(xn, xq)
-
-
-
-
-
-
-
-
-
-
-
