@@ -7,8 +7,8 @@ import requests, cookielib, re, time, os.path, sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-# 爬虫类
-class Spider:
+# 爬虫登录模块
+class SpiderLogin:
 	# 构造headers
 	headers = {
 		'Host': 'www.zhihu.com',
@@ -71,18 +71,3 @@ class Spider:
 		_xsrf = re.findall(r'name="_xsrf" value="(.*?)"', page.text)
 
 		return _xsrf[0]
-
-# 程序主入口
-print u'''
-	--------------------------------------
-	       模拟登录知乎 By 李昶昕
-	--------------------------------------
-'''
-
-print u'请输入知乎账号（手机号或邮箱）：'
-account = str(raw_input())
-print u'请输入密码：'
-password = str(raw_input())
-
-spider = Spider()
-spider.login(account, password)
