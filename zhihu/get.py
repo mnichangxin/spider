@@ -31,8 +31,9 @@ class GetPage:
 	def getPage(self, page):
 		content = self.getContent('https://www.zhihu.com/people/mnichangxin/following?page=' + page)
 
-		user_id.extend(re.findall('"url":"","urlToken":"(.*?)"', content))
-		user_name.extend(re.findall('"gender":.*?,"name":"(.*?)"', content))
+		# user_id.extend(re.findall('"url":"","urlToken":"(.*?)"', content))
+		# user_name.extend(re.findall('"gender":.*?,"name":"(.*?)"', content))
+		user_name.extend(re.findall('<span class="UserLink UserItem-name">.*?<a class="UserLink-link" target="_blank" href="(.*?)">(.*?)</a>.*?</span>', content))
 
 	def load(self):
 		number = self.getNumber()
@@ -45,7 +46,9 @@ class GetPage:
 		
 		f = open('data.txt', 'w')
 
+		# for i in range(0, len(user_name)):
+		# 	f.write('用户ID：' + user_name[i] + ', ' + '昵称：' + user_name[i] + '\n')
 		for i in range(0, len(user_name)):
-			f.write('用户ID：' + user_id[i] + ', ' + '昵称：' + user_name[i] + '\n')
+			f.write('昵称：' + str(user_name[i]) + '\n')
 
 		f.close()
