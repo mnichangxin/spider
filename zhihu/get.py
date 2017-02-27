@@ -55,6 +55,9 @@ class GetFollow:
 
 # 爬取关注的话题
 class GetTopic:
+	def __init__(self, user_id):
+		self.user_name = user_name
+
 	# 抓取页面内容
 	def getContent(self, url):
 		r = req.get(url)
@@ -64,14 +67,14 @@ class GetTopic:
 
 	# 获得关注话题，每页20个，计算出关注话题列表页数
 	def getNumber(self):
-		content = self.getContent('https://www.zhihu.com/people/mnichangxin/following')
+		content = self.getContent('https://www.zhihu.com/people/' + self.user_id + '/following')
 
 		number = int(re.findall('<span class="Profile-lightItemValue">(.*?)</span>', content)[1])
 
 		return number / 20 if number / 20 == 0 else number / 20 + 1 
 
 	def getPage(self, offset):
-		content = self.getContent('https://www.zhihu.com/api/v4/members/mnichangxin/following-topic-contributions?include=data%5B*%5D.topic.introduction&offset=' + offset + '&limit=20')
+		content = self.getContent('https://www.zhihu.com/api/v4/members/' + self.user_id + '/following-topic-contributions?include=data%5B*%5D.topic.introduction&offset=' + offset + '&limit=20')
 
 		topic_name.extend(re.findall('"topic": {"name": "(.*?)"', content))
 
@@ -84,7 +87,7 @@ class GetTopic:
 	def start(self):
 		self.load()
 		
-		f = open('topic.txt', 'w')
+		f = open('topic.txt', 'a')
 
 		for i in range(0, len(topic_name)):
 			f.write(topic_name[i] + '\n')
@@ -94,6 +97,9 @@ class GetTopic:
 
 # 爬取关注的问题
 class GetQue:
+	def __init__(self, user_id):
+		self.user_name = user_name
+
 	# 抓取页面内容
 	def getContent(self, url):
 		r = req.get(url)
@@ -103,14 +109,14 @@ class GetQue:
 
 	# 获得关注的问题，每页20个，计算出关注的问题列表页数
 	def getNumber(self):
-		content = self.getContent('https://www.zhihu.com/people/mnichangxin/following')
+		content = self.getContent('https://www.zhihu.com/people/' + self.user_id + '/following')
 
 		number = int(re.findall('<span class="Profile-lightItemValue">(.*?)</span>', content)[3])
 
 		return number / 20 if number / 20 == 0 else number / 20 + 1 
 
 	def getPage(self, offset):
-		content = self.getContent('https://www.zhihu.com/api/v4/members/mnichangxin/following-questions?include=data%5B*%5D.created%2Canswer_count%2Cfollower_count%2Cauthor&offset=' + offset + '&limit=20')
+		content = self.getContent('https://www.zhihu.com/api/v4/members/' + self.user_id + '/following-questions?include=data%5B*%5D.created%2Canswer_count%2Cfollower_count%2Cauthor&offset=' + offset + '&limit=20')
 
 		ques.extend(re.findall('"title": "(.*?)"', content))
 
@@ -123,9 +129,22 @@ class GetQue:
 	def start(self):
 		self.load()
 		
-		f = open('ques.txt', 'w')
+		f = open('ques.txt', 'a')
 
 		for i in range(0, len(ques)):
 			f.write(ques[i] + '\n')
 
 		f.close()
+
+# 深度循环遍历关注人，获取关注话题和关注问题
+class Get:
+	def start(self):
+		follows = GetFollow()
+		follows.start()
+
+		for i in range(0, len(user_id)):
+			topics = GetTopic(user_id[i])
+			ques = GetQue(user_id[i])
+
+			topics.start()
+			ques.start()
