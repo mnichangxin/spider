@@ -1,12 +1,12 @@
-# 模拟登录知乎
+# 爬取知乎数据
 
-知乎必爬，先从如何解决登录验证开始
+深度循环遍历关注人，目前可单线程爬取关注话题和关注问题，后续增加多线程
 
-* Python版本：2.7.3
+* Python版本：2.7.13
 
-* 更新时间：2017.02.25
+* 更新时间：2017.02.28
 
-* **后续：哈哈\(^o^)/~，关注人的API链接终于找到了！**
+* **后续：因为目前是单线程，后续增加多线程就快了\(^o^)/~**
 
 ## 原理
 
@@ -15,8 +15,3 @@
 * 关注话题获取：同理以上，API为：`https://www.zhihu.com/api/v4/members/mnichangxin/following-topic-contributions?include=data%5B*%5D.topic.introduction&offset=' + offset + '&limit=20`
 
 * 关注问题获取：同理以上，API为：`https://www.zhihu.com/api/v4/members/mnichangxin/following-questions?include=data%5B*%5D.created%2Canswer_count%2Cfollower_count%2Cauthor&offset=' + offset + '&limit=20`
-
-## 大致流程
-
-1. 获得关注人 => 遍历关注人列表
-2. 访问关注人主页 => 获得关注话题和关注问题

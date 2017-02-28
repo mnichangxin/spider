@@ -44,9 +44,6 @@ class GetFollow:
 
 	def start(self):
 		self.load()
-		
-		print str(len(user_id))
-		print str(len(user_name))
 
 		f = open('user.txt', 'w')
 
@@ -72,7 +69,7 @@ class GetTopic:
 	def getNumber(self):
 		content = self.getContent('https://www.zhihu.com/people/' + self.user_id + '/following')
 
-		number = int(re.findall('</span>.*?<span class="Profile-lightItemValue">(.*?)</span>', content)[1])
+		number = int(re.findall('<span class="Profile-lightItemName">关注的话题</span>.*?<span class="Profile-lightItemValue">(.*?)</span>', content)[0])
 
 		return number / 20 if number / 20 == 0 else number / 20 + 1 
 
@@ -114,7 +111,7 @@ class GetQue:
 	def getNumber(self):
 		content = self.getContent('https://www.zhihu.com/people/' + self.user_id + '/following')
 
-		number = int(re.findall('</span>.*?<span class="Profile-lightItemValue">(.*?)</span>', content)[3])
+		number = int(re.findall('<span class="Profile-lightItemName">关注的问题</span>.*?<span class="Profile-lightItemValue">(.*?)</span>', content)[0])
 
 		return number / 20 if number / 20 == 0 else number / 20 + 1 
 
