@@ -34,7 +34,7 @@ class GetFollow:
 		content = self.getContent('https://www.zhihu.com/api/v4/members/mnichangxin/followees?include=data%5B*%5D.answer_count%2Carticles_count%2Cgender%2Cfollower_count%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics&offset=' + offset + '&limit=20')
 
 		user_id.extend(re.findall('"url_token": "(.*?)"', content))
-		user_name.extend(re.findall('"avatar_url_template": ".*?", "name": "(.*?)"', content))
+		user_name.extend(re.findall(', "name": "(.*?)"', content))
 
 	def load(self):
 		number = self.getNumber()
@@ -45,6 +45,9 @@ class GetFollow:
 	def start(self):
 		self.load()
 		
+		print str(len(user_id))
+		print str(len(user_name))
+
 		f = open('user.txt', 'w')
 
 		for i in range(0, len(user_id)):
@@ -56,7 +59,7 @@ class GetFollow:
 # 爬取关注的话题
 class GetTopic:
 	def __init__(self, user_id):
-		self.user_name = user_name
+		self.user_id = user_id
 
 	# 抓取页面内容
 	def getContent(self, url):
@@ -69,7 +72,7 @@ class GetTopic:
 	def getNumber(self):
 		content = self.getContent('https://www.zhihu.com/people/' + self.user_id + '/following')
 
-		number = int(re.findall('<span class="Profile-lightItemValue">(.*?)</span>', content)[1])
+		number = int(re.findall('</span>.*?<span class="Profile-lightItemValue">(.*?)</span>', content)[1])
 
 		return number / 20 if number / 20 == 0 else number / 20 + 1 
 
@@ -98,7 +101,7 @@ class GetTopic:
 # 爬取关注的问题
 class GetQue:
 	def __init__(self, user_id):
-		self.user_name = user_name
+		self.user_id = user_id
 
 	# 抓取页面内容
 	def getContent(self, url):
@@ -111,7 +114,7 @@ class GetQue:
 	def getNumber(self):
 		content = self.getContent('https://www.zhihu.com/people/' + self.user_id + '/following')
 
-		number = int(re.findall('<span class="Profile-lightItemValue">(.*?)</span>', content)[3])
+		number = int(re.findall('</span>.*?<span class="Profile-lightItemValue">(.*?)</span>', content)[3])
 
 		return number / 20 if number / 20 == 0 else number / 20 + 1 
 
