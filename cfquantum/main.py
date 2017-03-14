@@ -13,4 +13,4 @@ account = spider.getConf()[0]
 holds = spider.getPage()[0]
 score = spider.getPage()[1]
 
-window = window.Window(account, holds, score)
+window = window.Window(spider, account, holds, score)

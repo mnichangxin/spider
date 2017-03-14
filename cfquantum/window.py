@@ -4,13 +4,11 @@
 from Tkinter import *
 
 import threading
-import spider
-
-spider = spider.Spider()
 
 # 窗体模块
 class Window:
-	def __init__(self, account, holds, score):
+	def __init__(self, spider, account, holds, score):
+		self.spider = spider
 		self.account = account
 		self.holds = holds
 		self.score = score
@@ -21,7 +19,7 @@ class Window:
 		# button事件处理
 		def btnClick(event):
 			if entry.get() == '':
-				label3['text'] = '表单为空!'
+				label3['text'] = '表单为空！'
 				return
 
 			try: 
@@ -33,9 +31,9 @@ class Window:
 				return
 
 			if event.widget == button1:
-				spider.create('call', entry.get(), self.target_type)
+				self.spider.create('call', entry.get(), self.target_type)
 			else:
-				spider.create('put', entry.get(), self.target_type)
+				self.spider.create('put', entry.get(), self.target_type)
 			
 			label3['text'] = '已投注' + entry.get() +'，数据将更新...请10分钟后再操作！'
 
@@ -53,6 +51,7 @@ class Window:
 			button1['bg'] = '#F0F0F0'
 			button2['state'] = NORMAL
 			button2['bg'] = '#F0F0F0'
+			label3['text'] = '可以投注'
 
 		# radio事件处理
 		def radioClick(event):
@@ -63,11 +62,14 @@ class Window:
 
 		# 定时刷新数据
 		def shuffle():
-			label1['text'] = spider.getPage()[0]
-			label2['text'] = spider.getPage()[1]
+			try:
+				label1['text'] = self.spider.getPage()[0]
+				label2['text'] = self.spider.getPage()[1]
+			except:
+				pass
 
 			global timer
-			timer = threading.Timer(60, shuffle)
+			timer = threading.Timer(5, shuffle)
 			timer.start()
 
 		# 外围窗体
@@ -105,12 +107,14 @@ class Window:
 
 		var = IntVar()
 
-		radio1 = Radiobutton(frame3, variable = var, text = 'XAU', value = 1)
+		radio1 = Radiobutton(frame3, variable = var, text = 'XAU', value = 1, state = 'active')
 		radio2 = Radiobutton(frame3, variable = var, text = 'EUR', value = 2)
 		entry = Entry(frame3)
 
 		radio1.bind('<Button-1>', radioClick)
 		radio2.bind('<Button-1>', radioClick)
+
+		radio1.select()
 
 		radio1.pack(side = LEFT)
 		radio2.pack(side = LEFT)
@@ -134,4 +138,3 @@ class Window:
 		timer.start()
 
 		root.mainloop()
-
