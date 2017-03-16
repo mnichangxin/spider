@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*-coding: utf-8-*-
 
-import re, sys
+import re, sys, time
 import req
 
 # 防止Unicode报错
@@ -15,13 +15,14 @@ class Spider:
 		self.page_url = 'https://www.cfquantum.org/api/simulator/info'
 		self.value_url = 'https://www.cfquantum.org/api/simulator/latest/'
 		self.create_url = 'https://www.cfquantum.org/api/simulator/create'
-
+		self.time_url = 'https://www.cfquantum.org/api/simulator/list?type=0&page=1&pagesize=10'
+	
 	# 登录
 	def login(self):
 		# POST参数
 		post_data = {
-			'json': '{"username":' + self.getConf()[0] + ',"password":' + self.getConf()[1] + '}',
-			'lan': 'zh_CN',
+			'json': '{"username":"' + self.getConf()[0] + '","password":"' + self.getConf()[1] + '"}',
+			'lan': 'en_US',
 			'withCredentials': 'true'
 		} 
 
@@ -64,6 +65,28 @@ class Spider:
 		value = re.findall('"last":(.*?),"put"', res)[0]
 
 		return value
+	
+	# 获取等待时间
+	def getTime(self):
+		res = req.get(self.time_url).content
+
+		try: 
+			expire_time = re.findall('"expireTime":(.*?),"createdAt"', res)[0]
+		except:
+			return False
+		
+		expire_time_hour = int(time.strftime('%H', time.localtime(int(expire_time[0:10]))))
+		expire_time_min = int(time.strftime('%M', time.localtime(int(expire_time[0:10]))))
+
+		now_time_hour = int(time.strftime('%H', time.localtime(time.time())))
+		now_time_min = int(time.strftime('%M', time.localtime(time.time())))
+		
+		if expire_time_hour == now_time_hour:
+			dur_time = expire_time_min - now_time_min
+		else:
+			dur_time = 60 - now_time_min + expire_time_min
+		
+		return dur_time
 
 	# 读取配置文件
 	def getConf(self):
