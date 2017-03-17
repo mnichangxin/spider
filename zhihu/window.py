@@ -7,14 +7,36 @@ import threading, os
 
 # 窗体模块
 class Window:
+	def __init__(self, spider_login, spider_get):
+		self.spider_login = spider_login
+		self.spider_get = spider_get
+		self.createWindow()
+
 	def createWindow(self):
 		# 按钮事件处理
 		def btnClick(event):
-			if entry1.get() == '' or entry2.get() == '' or entry3.get() == '':
+			if entry1.get() == '' or entry2.get() == '':
 				label4['text'] = '表单为空！'
 				return 
 			else:
-				label4['text'] = ''
+				try:
+					self.spider_login.getCaptcha()
+
+					label4['text'] = '请到当前目录下找到 captcha.jpg 输入验证码'
+					entry3['state'] = NORMAL
+				except:
+					label4['text'] = '登录失败！'
+					return
+			
+			if entry3['state'] == NORMAL:
+				try:
+					self.spider_login.login(entry1.get(), entry2.get(), entry3.get())
+				except:
+					label4['text'] = '登录失败！'
+					return
+				
+				label4['text'] = '登录成功！'
+
 
 		# 外围窗体
 		root = Tk()
@@ -47,7 +69,7 @@ class Window:
 		frame3 = Frame(root, padx = 10, pady = 10)
 
 		label3 = Label(frame3, text = '验证码：')
-		entry3 = Entry(frame3)
+		entry3 = Entry(frame3, state = DISABLED)
 
 		label3.pack(side = LEFT)
 		entry3.pack(side = RIGHT)
@@ -73,7 +95,3 @@ class Window:
 
 		# 启动
 		root.mainloop()
-
-
-window = Window()
-window.createWindow()
