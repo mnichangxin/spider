@@ -15,6 +15,16 @@ class Window:
 	def createWindow(self):
 		# 按钮事件处理
 		def btnClick(event):
+			if entry3['state'] == NORMAL and entry3['text'] != '':
+				try:
+					self.spider_login.login(entry1.get(), entry2.get(), entry3.get())
+				except:
+					label4['text'] = '登录失败！'
+					return
+				
+				label4['text'] = '登录成功！'
+				return
+
 			if entry1.get() == '' or entry2.get() == '':
 				label4['text'] = '表单为空！'
 				return 
@@ -28,15 +38,6 @@ class Window:
 					label4['text'] = '登录失败！'
 					return
 			
-			if entry3['state'] == NORMAL:
-				try:
-					self.spider_login.login(entry1.get(), entry2.get(), entry3.get())
-				except:
-					label4['text'] = '登录失败！'
-					return
-				
-				label4['text'] = '登录成功！'
-
 
 		# 外围窗体
 		root = Tk()
