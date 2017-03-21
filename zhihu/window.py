@@ -13,9 +13,9 @@ class Window:
 		self.createWindow()
 
 	def createWindow(self):
-		# 按钮事件处理
-		def btnClick(event):
-			if entry3['state'] == NORMAL and entry3['text'] != '':
+		# 按钮1事件处理
+		def btn1Click(event):
+			if entry3['state'] == NORMAL and entry3.get() != '':
 				try:
 					self.spider_login.login(entry1.get(), entry2.get(), entry3.get())
 				except:
@@ -23,21 +23,27 @@ class Window:
 					return
 				
 				label4['text'] = '登录成功！'
-				return
+				button1['state'] = DISABLED
+				button2['state'] = NORMAL
+ 				return
 
 			if entry1.get() == '' or entry2.get() == '':
 				label4['text'] = '表单为空！'
 				return 
-			else:
+			
+			if entry3['state'] != NORMAL:
 				try:
 					self.spider_login.getCaptcha()
 
-					label4['text'] = '请到当前目录下找到 captcha.jpg 输入验证码'
+					label4['text'] = '请找到 captcha.jpg 并输入验证码'
 					entry3['state'] = NORMAL
 				except:
 					label4['text'] = '登录失败！'
 					return
-			
+		
+		# 按钮2事件处理
+		def btn2Click(event):	
+			pass
 
 		# 外围窗体
 		root = Tk()
@@ -87,11 +93,14 @@ class Window:
 		# 按钮
 		frame5 = Frame(root, padx = 10, pady = 10)
 
-		button = Button(frame5, text = '登录', width = 10, height = 2)
+		button1 = Button(frame5, text = '登录', width = 10, height = 2)
+		button2 = Button(frame5, text = '抓取', width = 10, height = 2, state = DISABLED)
 
-		button.bind('<Button-1>', btnClick)
+		button1.bind('<Button-1>', btn1Click)
+		button2.bind('<Button-2>', btn2Click)
 
-		button.pack()
+		button1.pack(side = LEFT)
+		button2.pack(side = RIGHT)
 		frame5.pack()
 
 		# 启动

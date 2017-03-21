@@ -36,8 +36,8 @@ class GetFollow:
 	def getPage(self, offset):
 		content = self.getContent('https://www.zhihu.com/api/v4/members/' + self.user_id + '/followees?include=data%5B*%5D.answer_count%2Carticles_count%2Cgender%2Cfollower_count%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics&offset=' + offset + '&limit=20')
 
-		user_id_t = re.findall('"url_token": "(.*?)"', content)
-		user_name_t = re.findall(', "name": "(.*?)"', content)
+		# user_id_t = re.findall('"url_token": "(.*?)"', content)
+		# user_name_t = re.findall(', "name": "(.*?)"', content)
 
 		# ID去重
 		# for i in range(0, len(user_id)):
