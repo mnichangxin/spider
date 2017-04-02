@@ -43,7 +43,12 @@ class Window:
 		
 		# 按钮2事件处理
 		def btn2Click(event):	
-			pass
+			try:
+				label4['text'] = '爬取中......'
+				self.spider_get.start()
+				label4['text'] = '爬取完毕！'
+			except:
+				pass
 
 		# 外围窗体
 		root = Tk()
@@ -97,7 +102,7 @@ class Window:
 		button2 = Button(frame5, text = '抓取', width = 10, height = 2, state = DISABLED)
 
 		button1.bind('<Button-1>', btn1Click)
-		button2.bind('<Button-2>', btn2Click)
+		button2.bind('<Button-1>', btn2Click)
 
 		button1.pack(side = LEFT)
 		button2.pack(side = RIGHT)
