@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*-coding: utf-8-*-
 
-import re, time, os.path, sys
+import re, time, sys
 import req
 
 # 防止Unicode报错
@@ -11,7 +11,7 @@ sys.setdefaultencoding('utf-8')
 # 爬虫登录模块
 class SpiderLogin:
 	# 登录
-	def login(self, account, password, captcha):
+	def login(self, account, password):
 		# POST参数
 		post_data = {
 	        '_xsrf': self.getXsrf(),
@@ -33,8 +33,7 @@ class SpiderLogin:
 			res = req.post(post_url, data = post_data)
 		except:
 			del post_data['captcha_type']
-	    	# post_data['captcha'] = self.getCaptcha()
-	    	post_data['captcha'] = captcha
+	    	post_data['captcha'] = self.getCaptcha()
        		res = req.post(post_url, data = post_data)
 
     # 获取验证码
@@ -46,6 +45,11 @@ class SpiderLogin:
 		with open('captcha.jpg', 'wb') as f:
 			f.write(r.content)
 			f.close()
+
+		print u'请到当前目录下找到验证码并输入：'
+		captcha = raw_input()
+
+		return captcha
 			
     # 获取_xsrf动态参数
 	def getXsrf(self):       

@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*-coding: utf-8-*-
 
-import login, get, window
+import login, get
 
 # 程序主入口
 print u'''
@@ -11,12 +11,15 @@ print u'''
 '''
 
 # 登录
-spider_login =  login.SpiderLogin() # 实例化登录模块
-spider_get = get.Get()
+# print u'请输入邮箱或手机号：'
+# account = raw_input()
+# print u'请输入密码：'
+# password = raw_input()
 
-# window = window.Window(spider_login, spider_get)
+spider_login =  login.SpiderLogin()
+spider_login.login('18954109152', 'li1769.')
 
 
 # 抓取页面
-# spider_get = get.Get()
-# spider_get.start()
+spider_get = get.GetTop('19776749')
+spider_get.start()
