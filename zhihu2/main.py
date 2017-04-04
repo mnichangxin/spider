@@ -21,5 +21,8 @@ spider_login.login('18954109152', 'li1769.')
 
 
 # 抓取页面
-spider_get = get.GetTop('19776749')
+# spider_get = get.GetTop('19776749')
+# spider_get.start()
+
+spider_get = get.GetAnswer()
 spider_get.start()
