@@ -30,6 +30,15 @@ else:
 	client.save_token(TOKEN_FILE)
 
 
+# 读取文件
+f1 = open(FILE1, 'r')
+content = f1.readlines() # 逐行读为列表
+f1.close()
+
+# 去除每行的 '\n' 符
+for i in range(1, len(content)):
+	content[i].strip('\n')
+
 # 进程调用函数
 def process(user_id):	
 	try:
@@ -81,11 +90,6 @@ def callback(user):
 def main():
 	pool = Pool(10) # 创建进程池
 
-	# 读取文件
-	f1 = open(FILE1, 'r')
-	content = f1.readlines() # 逐行读为列表
-	f1.close()
-
 	# 创建赞同感谢表和关注表
 	f2 = open(FILE2, 'a')
 	f2.write(codecs.BOM_UTF8) # 防止csv文件乱码
@@ -102,7 +106,7 @@ def main():
 
 	# 创建多进程
 	for i in range(1, len(content)):
-		pool.apply_async(process, (content[i].strip('\n'), ), callback = callback)   
+		pool.apply_async(process, (content[i]), callback = callback)   
 
 	pool.close()
 	pool.join()

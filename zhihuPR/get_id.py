@@ -25,14 +25,14 @@ else:
 	client.login_in_terminal()
 	client.save_token(TOKEN_FILE)
 
-followers = client.topic(19559450).followers
+followers = client.topic(19564812).followers
 
 # 进程调用函数
 def Process(i):	
 	f = open('followers.csv', 'a')
 
 	try: 
-		if followers[i].follower_count >= 10000:
+		if followers[i].follower_count >= 5000:
 			f.write(','.join((followers[i].id,)) + '\n')
 	except:
 		pass
