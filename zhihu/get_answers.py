@@ -25,35 +25,36 @@ else:
 	client.login_in_terminal()
 	client.save_token(TOKEN_FILE)
 
-followers = client.topic(19564812).followers
-
 # 进程调用函数
-def Process(i):	
-	f = open('followers.csv', 'a')
-
-	try: 
-		if followers[i].follower_count >= 5000:
-			f.write(','.join((followers[i].id,)) + '\n')
+def Process(best_answer):	
+	f = open('best_answers.csv', 'a')
+	try:
+		f.write(','.join((best_answer.author.id, )) + '\n')
 	except:
 		pass
-	
 	f.close()
 
 # 进程创建函数
 def main():
 	pool = Pool(10) # 创建进程池
 
+	topics = [19550901] # 话题列表
+	best_answerss = [] # 最佳回答者迭代器列表
+
+	for i in range(len(topics)):
+		best_answerss.append(client.topic(topics[i]).best_answers)
+
 	print(u'正在爬取......')
 
 	# 写入文件
-	f = open('followers.csv', 'a')    
+	f = open('best_answers.csv', 'a')    
 	f.write(codecs.BOM_UTF8) # 防止csv文件乱码
 	f.write(','.join(('UserId',)) + '\n')
 	f.close()
 
-	# 创建多进程
-	for i in range(10000):
-		pool.apply_async(Process, (i, ))
+	for i in range(len(best_answerss)):
+		for j in best_answerss[i]:
+			pool.apply_async(Process, (j, ))  
 
 	pool.close()
 	pool.join() 
@@ -62,4 +63,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
