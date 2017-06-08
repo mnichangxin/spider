@@ -26,8 +26,7 @@ else:
 # 只要一个问题下有十个以上的答案的问题，然后再爬答案的特征： 
 # 答案赞同数 答案对应问题的火热度（这个问题下一共有多少个答案） 
 # 收藏数 感谢数 评论数 作者的pagerank值（这个有了） 
-# 作者的活跃度（爬他最近一个月的动态数目） 作者的粉丝数 作者的赞同数 感谢数 
-# 收藏数 （关于答案的属性越多越好）
+# 作者的活跃度（爬他最近一个月的动态数目） 作者的粉丝数 作者的赞同数 感谢数 收藏数 （关于答案的属性越多越好）
 
 # 数据集合
 topic_id = [] # 父话题及子话题ID
@@ -83,6 +82,18 @@ def crawQues():
 
 # 3. 再次爬取并归类存入数据文件
 def classify():
+	for i in range(len(new_best_answer_id)):
+		ans = client.answer(new_best_answer_id[i]) # 答案
+		que = ans.question # 问题
+		author = ans.author # 答案的作者
+
+		ans_voteup = ans.voteup_count # 赞同数
+		ans_thanks = ans.thanks_count # 感谢数
+		ans_collection = len(list(ans.collections)) # 收藏数
+		ans_comment = ans.comment_count # 评论数
+
+		que_id = que.id # 问题ID 
+		que_count = que.answer_count # 问题活跃度，即问题回答数
 
 
 crawlBestAnswers()
