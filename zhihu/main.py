@@ -2,9 +2,9 @@
 # -*-coding: utf-8-*-
 
 from __future__ import unicode_literals, print_function
-from zhihu_oauth import ZhihuClient
+from zhihu_oauth import ZhihuClient, ActType
 from multiprocessing import Pool
-import os, sys, codecs
+import os, sys, codecs, time, datetime
 
 # 防止Unicode报错
 reload(sys)
@@ -32,6 +32,10 @@ else:
 topic_id = [] # 父话题及子话题ID
 best_answer_id = [] # 精华回答ID
 new_best_answer_id = [] # 经过问题筛选后的精华回答ID
+
+# 获取当前时间戳
+day_ago = (datetime.datetime.now() - datetime.timedelta(days = 30))
+timestamp = int(time.mktime(day_ago.timetuple()))
 
 # 1. 爬取AI包括子话题下所有的精华答案ID并做去重
 def crawlBestAnswers():
@@ -82,19 +86,61 @@ def crawQues():
 
 # 3. 再次爬取并归类存入数据文件
 def classify():
-	for i in range(len(new_best_answer_id)):
+	file = open('breakpoint.txt', 'r') # 断点续爬记录文件
+	start = int(file.read())
+	file.close()
+
+	f = open('data.csv', 'a') # 追加模式，支持断点续爬
+	
+	if start == 0:
+		f.write(codecs.BOM_UTF8) # 防止csv文件乱码
+		f.write(','.join(('ans_id', 'ans_voteup', 'ans_thanks', 'ans_collection', 'ans_comment', 'que_id', 'que_activities', 'author_id', 'author_collected', 'author_follower', 'author_following', 'author_thanked', 'author_voteup')) + '\n') # 写入头部
+
+	for i in range(start, len(new_best_answer_id)):
+		# try: 
 		ans = client.answer(new_best_answer_id[i]) # 答案
 		que = ans.question # 问题
 		author = ans.author # 答案的作者
 
+		ans_id = new_best_answer_id[i]
 		ans_voteup = ans.voteup_count # 赞同数
 		ans_thanks = ans.thanks_count # 感谢数
 		ans_collection = len(list(ans.collections)) # 收藏数
 		ans_comment = ans.comment_count # 评论数
 
 		que_id = que.id # 问题ID 
-		que_count = que.answer_count # 问题活跃度，即问题回答数
+		que_activities = que.answer_count # 问题活跃度（问题回答数）
 
+		author_id = author.id # 作者ID
+		author_collected = author.collected_count # 被收藏数
+		author_follower = author.follower_count # 粉丝数]''
+		author_following = author.following_count # 关注数
+		author_thanked = author.thanked_count # 感谢数
+		author_voteup = author.voteup_count # 赞同数
 
-crawlBestAnswers()
-crawQues()
+		activities = author.activities 
+		author_activities = 0 # 作者活跃度（一个月的动态数目）
+		for j in activities:
+			if j.created_time > timestamp:
+				author_activities += 1
+			else:
+				break
+
+		f.write(','.join((str(ans_id), str(ans_voteup), str(ans_thanks), str(ans_collection), str(ans_comment), str(que_id), str(que_activities), author_id, str(author_collected), str(author_follower), str(author_following), str(author_thanked), str(author_voteup))) + '\n') # 写入数据
+		# except:
+		# 	pass
+
+		file = open('breakpoint.txt', 'w')
+		file.write(str(i + 1))
+		file.close()
+
+	f.close()
+
+# 主函数
+def main():
+	print('爬取中......')
+	crawlBestAnswers()
+	crawQues()
+	classify()
+
+main()
