@@ -4,7 +4,7 @@
 from __future__ import unicode_literals, print_function
 from zhihu_oauth import ZhihuClient, ActType
 from multiprocessing import Pool
-import os, sys, codecs
+import os, sys, codecs, time, datetime
 
 # 防止Unicode报错
 reload(sys)
@@ -33,6 +33,9 @@ ans_comment = ans.comment_count # 评论数
 
 author = ans.author
 
+threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days = 29))
+timeStamp = int(time.mktime(threeDayAgo.timetuple()))
+
 # print(author.id) # 作者ID
 # print(author.collected_count) # 被收藏数
 # print(author.follower_count) # 粉丝数
@@ -42,8 +45,16 @@ author = ans.author
 
 activities = author.activities
 
+count = 0
+
 for i in activities:
-	print(i.created_time)
+	if i.created_time > timeStamp:
+		print(i.created_time)
+		count = count + 1
+	else:
+		break
+
+print(count)
 
 # print(str(ans_voteup) + '\n')
 # print(str(ans_thanks) + '\n')
