@@ -21,13 +21,6 @@ else:
 	client.login_in_terminal()
 	client.save_token(TOKEN_FILE)
 
-
-# 爬AI包括子话题下所有的精华答案，把这些答案按对应的问题进行分类，
-# 只要一个问题下有十个以上的答案的问题，然后再爬答案的特征： 
-# 答案赞同数 答案对应问题的火热度（这个问题下一共有多少个答案） 
-# 收藏数 感谢数 评论数 作者的pagerank值（这个有了） 
-# 作者的活跃度（爬他最近一个月的动态数目） 作者的粉丝数 作者的赞同数 感谢数 收藏数 （关于答案的属性越多越好）
-
 # 数据集合
 topic_id = [] # 父话题及子话题ID
 best_answer_id = [] # 精华回答ID
@@ -97,38 +90,38 @@ def classify():
 		f.write(','.join(('ans_id', 'ans_voteup', 'ans_thanks', 'ans_collection', 'ans_comment', 'que_id', 'que_activities', 'author_id', 'author_collected', 'author_follower', 'author_following', 'author_thanked', 'author_voteup')) + '\n') # 写入头部
 
 	for i in range(start, len(new_best_answer_id)):
-		# try: 
-		ans = client.answer(new_best_answer_id[i]) # 答案
-		que = ans.question # 问题
-		author = ans.author # 答案的作者
+		try: 
+			ans = client.answer(new_best_answer_id[i]) # 答案
+			que = ans.question # 问题
+			author = ans.author # 答案的作者
 
-		ans_id = new_best_answer_id[i]
-		ans_voteup = ans.voteup_count # 赞同数
-		ans_thanks = ans.thanks_count # 感谢数
-		ans_collection = len(list(ans.collections)) # 收藏数
-		ans_comment = ans.comment_count # 评论数
+			ans_id = new_best_answer_id[i]
+			ans_voteup = ans.voteup_count # 赞同数
+			ans_thanks = ans.thanks_count # 感谢数
+			ans_collection = len(list(ans.collections)) # 收藏数
+			ans_comment = ans.comment_count # 评论数
 
-		que_id = que.id # 问题ID 
-		que_activities = que.answer_count # 问题活跃度（问题回答数）
+			que_id = que.id # 问题ID 
+			que_activities = que.answer_count # 问题活跃度（问题回答数）
 
-		author_id = author.id # 作者ID
-		author_collected = author.collected_count # 被收藏数
-		author_follower = author.follower_count # 粉丝数]''
-		author_following = author.following_count # 关注数
-		author_thanked = author.thanked_count # 感谢数
-		author_voteup = author.voteup_count # 赞同数
+			author_id = author.id # 作者ID
+			author_collected = author.collected_count # 被收藏数
+			author_follower = author.follower_count # 粉丝数]''
+			author_following = author.following_count # 关注数
+			author_thanked = author.thanked_count # 感谢数
+			author_voteup = author.voteup_count # 赞同数
 
-		activities = author.activities 
-		author_activities = 0 # 作者活跃度（一个月的动态数目）
-		for j in activities:
-			if j.created_time > timestamp:
-				author_activities += 1
-			else:
-				break
+			activities = author.activities 
+			author_activities = 0 # 作者活跃度（一个月的动态数目）
+			for j in activities:
+				if j.created_time > timestamp:
+					author_activities += 1
+				else:
+					break
 
-		f.write(','.join((str(ans_id), str(ans_voteup), str(ans_thanks), str(ans_collection), str(ans_comment), str(que_id), str(que_activities), author_id, str(author_collected), str(author_follower), str(author_following), str(author_thanked), str(author_voteup))) + '\n') # 写入数据
-		# except:
-		# 	pass
+			f.write(','.join((str(ans_id), str(ans_voteup), str(ans_thanks), str(ans_collection), str(ans_comment), str(que_id), str(que_activities), author_id, str(author_collected), str(author_follower), str(author_following), str(author_thanked), str(author_voteup))) + '\n') # 写入数据
+		except:
+			pass
 
 		file = open('breakpoint.txt', 'w')
 		file.write(str(i + 1))
