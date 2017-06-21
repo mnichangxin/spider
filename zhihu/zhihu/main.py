@@ -21,63 +21,38 @@ else:
 	client.login_in_terminal()
 	client.save_token(TOKEN_FILE)
 
-# 数据集合
-topic_id = [] # 父话题及子话题ID
-best_answer_id = [] # 精华回答ID
-new_best_answer_id = [] # 经过问题筛选后的精华回答ID
+que_id = [50824266,50050401,55753169,52768740,43304486,38387206,29938038,50643209,54048527,51783509,23299373,29160943,45096702,23418797,51788894,54377817,23945902,48038533,51788678,54217494,54461787,40436801,51879275,34843901,42887126,21802548,28926356,50806552,52740496,52102239,39477444,57052990,38656861,55926939,54680196,53613635,46575222,58778536,36890053,54680317,56169136,50788193,49446556,48038437,51890140,36884389,36692190,57456575,32271883,47741800,54379931,24506695,47045674,54857314,52878619,52531244,26342064,55576523,26851944,54647152,59475884,48034036,54854263,38570005,41835465,46940666,35982249,49272693,22195254,40910893,54425022,20197709,21317756,59464081,37792432,27609802,50742400,31169617,20210846,59319528,29048520,23909308,58056204,42090397,58802415,29073750,59026879,39375325,52712742,53306075,56691747,54857138,54853112,38537425,51817797,23954186,39241682,57676697,56192655,54862155]
+answer_id = []
 
 # 获取当前时间戳
 day_ago = (datetime.datetime.now() - datetime.timedelta(days = 30))
 timestamp = int(time.mktime(day_ago.timetuple()))
 
-# 1. 爬取AI包括子话题下所有的精华答案ID并做去重
-def crawlBestAnswers():
-	parent_topic = client.topic(19551275) # 父话题ID
+def crawAnswers(): 
+	if not os.path.exists('answer_id.txt'): # 如果数据存在，直接读取
+		f = open('answer_id.txt', 'w')
 
-	for i in parent_topic.children:
-		topic_id.append(int(i.id)) # 子话题ID入队列
+		for i in range(len(que_id)):
+			que = client.question(que_id[i])
+			ans = que.answers
 
-	if not os.path.exists('best_answer_id.txt'): # 如果数据存在，直接读取
-		f = open('best_answer_id.txt', 'w')
+			# k = 0
 
-		for i in range(len(topic_id)):
-			best_answers = client.topic(topic_id[i]).best_answers # 每个话题下的精华回答
-			for j in best_answers:
-				j_id = j.id
-				if j_id not in best_answer_id:
-					best_answer_id.append(j_id) # 精华回答ID入队列
-					f.write(str(j_id) + '\n') # 写入文件
+			for j in ans:
+				# if k < 20:
+				answer_id.append(j.id)
+				f.write(str(j.id) + '\n')
+				# k += 1
 
 		f.close()
 	else:
-		f = open('best_answer_id.txt', 'r')
+		f = open('answer_id.txt', 'r')
 
 		for i in f:
-			best_answer_id.append(int(i))
+			answer_id.append(int(i))
 
 		f.close()
 
-
-# 2. 爬取答案ID对应的问题（筛选一个问题下有十个以上答案的问题）
-def crawQues():
-	if not os.path.exists('new_best_answer_id.txt'):
-		f = open('new_best_answer_id.txt', 'w')	
-
-		for i in range(len(best_answer_id)):
-			que = client.answer(best_answer_id[i]).question
-			que_count = que.answer_count # 问题下的回答数
-			if que_count >= 10:
-				new_best_answer_id.append(best_answer_id[i]) # 筛选后后的精华问题ID
-				f.write(str(best_answer_id[i]) + '\n') # 写入文件
-
-		f.close()
-	else:
-		f = open('new_best_answer_id.txt', 'r')
-
-		for i in f:
-			new_best_answer_id.append(int(i))
-
-# 3. 再次爬取并归类存入数据文件
 def classify(): 
 	file = open('breakpoint.txt', 'r') # 断点续爬记录文件
 	start = int(file.read())
@@ -89,13 +64,13 @@ def classify():
 		f.write(codecs.BOM_UTF8) # 防止csv文件乱码
 		f.write(','.join(('ans_id', 'ans_voteup', 'ans_thanks', 'ans_collection', 'ans_comment', 'que_id', 'que_activities', 'author_id', 'author_collected', 'author_follower', 'author_following', 'author_thanked', 'author_voteup', 'author_activities')) + '\n') # 写入头部
 
-	for i in range(start, len(new_best_answer_id)):
+	for i in range(start, len(answer_id)):
 		try: 
-			ans = client.answer(new_best_answer_id[i]) # 答案
+			ans = client.answer(answer_id[i]) # 答案
 			que = ans.question # 问题
 			author = ans.author # 答案的作者
 
-			ans_id = new_best_answer_id[i]
+			ans_id = answer_id[i]
 			ans_voteup = ans.voteup_count # 赞同数
 			ans_thanks = ans.thanks_count # 感谢数
 			ans_collection = len(list(ans.collections)) # 收藏数
@@ -132,8 +107,7 @@ def classify():
 # 主函数
 def main():
 	print('爬取中......')
-	crawlBestAnswers()
-	crawQues()
+	crawAnswers()
 	classify()
 
 main()
