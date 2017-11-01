@@ -5,10 +5,11 @@ import requests
 
 # 构造headers
 headers = {
-	'origin': 'https://www.cfquantum.org',
-	'user-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-	'accept-encoding': 'gzip, deflate, br',
-	'accept-language': 'zh-CN,zh;q=0.8,en;q=0.6',
+	'Host': 'www.qinms.com',
+	'Origin': 'http://www.qinms.com',
+	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+	'Accept-Encoding': 'gzip, deflate',
+	'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6'
 }
 
 # 建立Session
@@ -21,3 +22,4 @@ def get(url, data = {}):
 # Post方法
 def post(url, data = {}):
 	return session.post(url, data = data, headers = headers)
+
