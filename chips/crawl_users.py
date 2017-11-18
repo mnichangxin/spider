@@ -16,7 +16,7 @@ def crawl():
 	}
 	# 爬取链接
 	res = req.post('https://www.chips.ltd/products/super_book_query', post_data)
-	data_json= json.loads(res.text)
+	data_json = json.loads(res.text)
 
 	return data_json['results']
 

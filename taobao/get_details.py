@@ -18,10 +18,10 @@ def getTaoBaoDetails(url):
 	dd = soup.select(".tb-shop-rate dd") #获取描述、服务、物流的数字信息，该信息存放在一个列表，需要使用正则表达式提取
 	dd_value = []
 	
-	if len(dd)>0:
+	if len(dd) > 0:
 		try:
-		    for d in range(0,3):
-		        dd_value.append(re.search(pattern=r'[\s]*([0-9]\.[0-9])[\s]*',string=dd[d].text).group(1))
+		    for d in range(0, 3):
+		        dd_value.append(re.search(pattern = r'[\s]*([0-9]\.[0-9])[\s]*',string = dd[d].text).group(1))
 		except IndexError as err:
 		    print(res.url)
 
@@ -84,7 +84,7 @@ def getTaoBaoDetails(url):
 
 def getTmallDetails(url):
 	res = requests.get(url)
-	soup = BeautifulSoup(res.text,"html.parser")
+	soup = BeautifulSoup(res.text, "html.parser")
  
 	dd = soup.select(".shop-rate ul li") #获取描述、服务、物流的数字信息，该信息存放在一个列表，需要使用正则表达式提取
 	dd_value = []

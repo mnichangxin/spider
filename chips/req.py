@@ -11,9 +11,9 @@ headers = {
 	'Accept-Encoding': 'gzip, deflate, br',
 	'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
 	'Referer': 'https://www.chips.ltd/products/super_book_index',
-	'X-CSRF-TOKEN': '16757a86-ac70-4909-b8c2-cc20143471b0',
 	'X-Requested-With': 'XMLHttpRequest',
-	'Cookie': 'liyungf_tc=AQAAANbyigUZiwcAHkaAcTv3rqqaeFuq; SESSION=6e69e49e-affd-4c48-89a4-bc8dd04afd7a; JSESSIONID=39FBF4BD7FD3E7911C81007ED6A72AFD'
+	'X-CSRF-TOKEN': 'd3577802-d3c3-45a1-92db-025757f5ff8f',
+	'Cookie': 'aliyungf_tc=AQAAAPh+oBTKZAYAA8qAcX/fE+Ib3e0H; SESSION=6b7c8f45-c84c-4f05-bbbf-f61addcf3803; JSESSIONID=5FC3F15804F1062C5B431583434C4066'
 }
 
 # 建立Session
