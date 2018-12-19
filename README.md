@@ -1,4 +1,5 @@
 # spider
-Python爬虫仓库
+
+Spider respository developed by `Python`.
 
 
