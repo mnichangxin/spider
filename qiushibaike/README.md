@@ -1,10 +1,18 @@
-# 糗事百科简单爬虫
+# Spider of qiushibaike
 
-爬虫新手上路，纯属练手(∩_∩)，爬取糗事百科24小时热度段子
+## Introduction
 
-* Python版本：2.7.3
+Crawling qiushibaike datas.
 
-* 更新时间：2017.02.07
+## Enviroment:
 
-* 使用：运行提示输入要爬取的页数，本地会自动创建一个txt文档存储爬取内容
+* Python version: `Python 2.7.13`
+* Depend modules: `requests`
 
+## Usage
+
+Setting enviroment of above when you use it. `main.py` is main entry of project. And run command:
+
+```
+    python main.py
+```
