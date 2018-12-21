@@ -14,5 +14,5 @@ Crawling ncicdiphone datas.
 Setting enviroment of above when you use it. `main.py` is main entry of project. And run command:
 
 ```
-    python main.py
+    python mains.py
 ```
