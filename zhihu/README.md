@@ -1,1 +1,1 @@
-# 基于知乎问答平台的PageRank算法研究与实现
+# Research and Implementation of PageRank Algorithm Based on Knowledge and Answer Platform
