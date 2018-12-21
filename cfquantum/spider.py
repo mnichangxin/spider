@@ -90,7 +90,7 @@ class Spider:
 
 	# 读取配置文件
 	def getConf(self):
-		f = open('conf.json')
+		f = open('./config/conf.json')
 
 		conf = f.read()
 	

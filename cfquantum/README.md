@@ -1,12 +1,19 @@
-# 模拟操作cfquantum网站，获取数据
+# Spider of cfquantum
 
-## 说明
+## Introduction
 
-### 环境
+It is a window application by click to crawl [cfquantum](https://cfquantum.org).
 
-* python版本：2.7.13
-* 外部模块：requests
+## Enviroment:
 
-### 使用
+* Python version: `Python 2.7.13`
+* Depend modules: `requests`, `Tkinter`
 
-使用前必须配置上述环境，`main.py` 为主入口，直接 `python main.py` 即可。
+## Usage
+
+Setting enviroment of above when you use it. `main.py` is main entry of project. And run command:
+
+```
+    python main.py
+```
+
