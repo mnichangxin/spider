@@ -11,3 +11,4 @@ Spider respository developed by `Python`.
 7. [qiushibaike](https://github.com/mnichangxin/spider/tree/master/qiushibaike)
 8. [tmall](https://github.com/mnichangxin/spider/tree/master/tmall)
 9. [zhihu](https://github.com/mnichangxin/spider/tree/master/zhihu)
+10. [gzbtgl](https://github.com/mnichangxin/spider/tree/master/gzbtgl)
