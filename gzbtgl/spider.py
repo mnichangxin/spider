@@ -11,7 +11,7 @@ queryParams = {
 	'n': '',
 	'IdCard': '',
 	'p': '拖拉机',
-	'areaName': '', 
+	'areaName': '',
 	'AreaCode': '',
 	'qy': ''
 }
@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 # 获取 __RequestVerificationToken
 def getReqVerToken(soup):
 	return soup.find('input', type='hidden')['value']
-	
+
 # 更新 queryParams
 def updateQueryParams(reqVerToken):
 	queryParams['__RequestVerificationToken'] = reqVerToken
@@ -29,9 +29,9 @@ def updateQueryParams(reqVerToken):
 # 预爬取，获得表头和页码数
 def preGet():
 	# 获取初始的 __RequestVerificationToke
-	initialUrl = 'http://113.57.190.21/gzbtgl/pub/gongshi'
+	initialUrl = 'http://222.143.21.233:2018/pub/gongshi'
 	initialRes = req.get(initialUrl)
-	
+
 	initialSoup = BeautifulSoup(initialRes.content, 'html.parser')
 
 	hiddenInput = initialSoup.find('input', type='hidden')
@@ -39,7 +39,7 @@ def preGet():
 	updateQueryParams(getReqVerToken(initialSoup))
 
 	# 获取表头和页码数
-	url = 'http://113.57.190.21/gzbtgl/pub/GongShiSearch'
+	url = 'http://222.143.21.233:2018/pub/GongShiSearch'
 	res = req.post(url, queryParams)
 
 	soup = BeautifulSoup(res.content, 'html.parser')
@@ -56,9 +56,9 @@ def preGet():
 
 # 爬取每一页的数据
 def getPage(pageNum):
-	url = 'http://113.57.190.21/gzbtgl/pub/GongShiSearch?pageIndex=' + str(pageNum)
+	url = 'http://222.143.21.233:2018/pub/GongShiSearch?pageIndex=' + str(pageNum)
 	res = req.post(url, queryParams)
-	
+
 	soup = BeautifulSoup(res.content, 'html.parser')
 
 	updateQueryParams(getReqVerToken(soup))
@@ -84,13 +84,13 @@ def startGet(startPageNum, endPageNum, preData):
 	table = f.add_sheet('sheet1', cell_overwrite_ok = True)
 
 	for i in range(len(thData)): table.write(0, i, thData[i])
-	
+
 	dataPool = [[thData]]
 
 	for i in range(startPageNum, endPageNum + 1):
-		if i % 30 == 0:
-			logging.info('限流，45s 之后继续')
-			time.sleep(45)
+		if i % 15 == 0:
+			logging.info('限流，20s 之后继续')
+			time.sleep(20)
 
 		logging.info('开始爬取第 {} 页'.format(i))
 		data = getPage(i)
@@ -98,14 +98,14 @@ def startGet(startPageNum, endPageNum, preData):
 		dataLength = len(data)
 		dPLength = len(dataPool)
 
-		for j in range(dataLength): 
+		for j in range(dataLength):
 			rowLength = len(data[j])
-			for k in range(rowLength): 
+			for k in range(rowLength):
 				table.write(dPLength + j, k, data[j][k])
-		
+
 		if i == endPageNum:
 			if not os.path.exists('./xls'): os.makedirs('./xls')
-			f.save('./xls/2020湖北农机拖拉机类目.xls')
+			f.save('./xls/2020河南农机拖拉机类目.xls')
 			logging.info('爬取完成并存表！')
 
 		dataPool.extend(data)

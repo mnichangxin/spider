@@ -6,7 +6,7 @@ from requests.adapters import HTTPAdapter
 
 # 构造headers
 headers = {
-	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.2924.87 Safari/537.36',
 	'Accept-Encoding': 'gzip, deflate, br',
 	'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6'
 }
