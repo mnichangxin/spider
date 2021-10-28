@@ -10,9 +10,9 @@ logging.basicConfig(level=logging.INFO)
 queryActionParams = {
 	'ssdm': '',
 	'dwmc': '',
-	'mldm': 'zyxw',
+	'mldm': '03',
 	'mlmc': '',
-	'yjxkdm': '0352',
+	'yjxkdm': '0301',
 	'zymc': '',
 	'xxfs': '',
 	'pageno': 0
@@ -64,6 +64,11 @@ def getSchData(schUrl):
 			schData.append(trData)
 	return schData
 
+def getSchPageNo(schUrl):
+	res = req.get(schUrl)
+	soup = BeautifulSoup(res.content, 'html.parser')
+	return parsePageNoBySoup(soup)
+
 def getData(startNo, endNo):
 	allData = []
 	for i in range(startNo, endNo + 1):
@@ -81,7 +86,9 @@ def getData(startNo, endNo):
 				text = tdDiv[k].get_text(separator=' ', strip=True)
 				text = text.replace('\ue664', '是')
 				trData.append(text)
-			schData = getSchData(schUrl)
+			schData = []
+			schEndNo = getSchPageNo(schUrl)
+			for m in range(1, schEndNo + 1): schData.extend(getSchData(schUrl + '&pageno=' + str(m)))
 			newTrData = []
 			for o in range(len(schData)):
 				newTrDataI = []
@@ -91,15 +98,18 @@ def getData(startNo, endNo):
 			allData.extend(newTrData)
 	return allData
 
-def getPageNo():
-	url = 'https://yz.chsi.com.cn/zsml/queryAction.do'
-	res = req.post(url, queryActionParams)
-	soup = BeautifulSoup(res.content, 'html.parser')
+def parsePageNoBySoup(soup):
 	hasLipBox = soup.find('div', class_='zsml-page-box').find('ul', class_='ch-page').find('li', class_='lip_input-box')
 	allPageDiv = soup.find('div', class_='zsml-page-box').find('ul', class_='ch-page').find_all('li', class_='lip')
 	endPageDiv = allPageDiv[-3] if hasLipBox else allPageDiv[-2]
 	pageNo = int(endPageDiv.find('a').get_text(separator='', strip=True))
 	return pageNo
+
+def getPageNo():
+	url = 'https://yz.chsi.com.cn/zsml/queryAction.do'
+	res = req.post(url, queryActionParams)
+	soup = BeautifulSoup(res.content, 'html.parser')
+	return parsePageNoBySoup(soup)
 
 if __name__ == '__main__':
 	logging.info('开始爬取......')
