@@ -10,9 +10,9 @@ logging.basicConfig(level=logging.INFO)
 queryActionParams = {
 	'ssdm': '',
 	'dwmc': '',
-	'mldm': '03',
+	'mldm': 'zyxw',
 	'mlmc': '',
-	'yjxkdm': '0301',
+	'yjxkdm': '0351',
 	'zymc': '',
 	'xxfs': '',
 	'pageno': 0
@@ -25,7 +25,7 @@ def saveToXls(allData):
 	for i in range(len(allData)):
 		for j in range(len(allData[i])):
 			table.write(i, j, allData[i][j])
-	f.save('./xls/硕士专业目录-专业学位-社会工作.xls')
+	f.save('./xls/硕士专业目录-专业学位-法律.xls')
 	logging.info('爬取完成并存表...')
 
 def getKskmData(kskmUrl):
@@ -99,7 +99,7 @@ def getData(startNo, endNo):
 	return allData
 
 def parsePageNoBySoup(soup):
-	hasLipBox = soup.find('div', class_='zsml-page-box').find('ul', class_='ch-page').find('li', class_='lip_input-box')
+	hasLipBox = soup.find('div', class_='zsml-page-box').find('ul', class_='ch-page').find('li', class_='lip-input-box')
 	allPageDiv = soup.find('div', class_='zsml-page-box').find('ul', class_='ch-page').find_all('li', class_='lip')
 	endPageDiv = allPageDiv[-3] if hasLipBox else allPageDiv[-2]
 	pageNo = int(endPageDiv.find('a').get_text(separator='', strip=True))
